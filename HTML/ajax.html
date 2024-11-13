@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="submit" id="special" value="Get Data">
+    <p>Welcome!</p>
+    <div id="data" class="data">
+        <!-- Content will be loaded here -->
+    </div>
+    <script>
+        let btn = document.getElementById("special");
+        let dataele = document.getElementById("data"); // Fixed 'document' spelling and correct element ID
+
+        btn.addEventListener("click", loadData);
+
+        function loadData() {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', 'text.txt', true);
+            
+            xhr.onload = function() { // Changed openprogress to onload
+                if (xhr.status === 200) {
+                    dataele.innerHTML = xhr.responseText; // Display fetched data
+                } else {
+                    dataele.innerHTML = "Error loading data.";
+                }
+            };
+
+            xhr.onerror = function() {
+                dataele.innerHTML = "Request failed.";
+            };
+
+            xhr.send();
+        }
+    </script>
+</body>
+</html>
