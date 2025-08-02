@@ -63,9 +63,7 @@ npm start
 📸 Screenshots
 Upload screenshots in the screenshots/ folder and reference them like:
 🧑‍💻 Contributors
-Your Name
-
-Teammate Name
+Harshavardhan Podeti
 
 
 
