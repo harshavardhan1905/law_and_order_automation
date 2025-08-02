@@ -29,6 +29,14 @@ export default function officerLogin() {
       <label htmlFor="password">Password</label>
       <input type="password" id='password' className='form-control' placeholder='password' />
     </div>
+    <div className='form-group mb-3'>
+          <select name="location" id="" className='form-select' required>
+            <option value="" disabled selected>Select Location</option>
+            <option value="Dundhigal">Dundhigal</option>
+            <option value="Gandimaisamma">Gandimaisamma</option>
+            <option value="Medchal">Medchal</option>
+          </select>
+        </div>
     <button className='btn btn-primary form-control mb-2'>Login</button>
     <div>
       <a href="#">Sign Up?</a>

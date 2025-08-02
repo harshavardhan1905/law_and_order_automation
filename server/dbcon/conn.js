@@ -92,7 +92,9 @@ app.post('/add/officer', async(req, res)=>{
             role: req.body.officer_role,
             working: req.body.officer_working
     });
+        // console.log(data)
         const OfficersData = await data.save();
+        console.log(OfficersData)
         res.status(201).json(OfficersData);
         const user = await db.collection('officers').find().toArray();
         res.json(user) 
