@@ -42,6 +42,7 @@ const AdminHome = () => {
     //invoke the setOfficer useState
     setOfficers(dataOfficers)
   }
+  // console.log(typeof officer)
   // console.log(officerHandler())
   useEffect(() => {
     // console.log(officerHandler());

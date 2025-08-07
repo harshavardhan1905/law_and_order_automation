@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react';
 import LawOrder from './componentsvps/lawOrder';
 import WomenProtection from './componentsvps/womenProtection';
@@ -6,13 +6,22 @@ import CyberCrime from './componentsvps/cyberCrime';
 import Footer from './footer';
 import VpsHome from './componentsvps/vpsHome';
 import { useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function vps() {
   const [page, setPage] = useState(null);
+  const [location_param, setLocation_param] = useState('');
+  // const [department, setDepartment] = useState();
   const location = useLocation();
-  const userLocation = location.state?.location || "Unknown";
-  console.log(location.state); // To check if location state is passed correctly
+  const userLocation = location.state?.location || "Unknown"; 
+  // console.log(location.state); // To check if location state is passed correctly
   // console.log(page)
+
+  //assigning params to location, department as page
+  useEffect(() => {
+    setLocation_param(userLocation)
+
+}, [location_param, page]);
 
   return (
     <div>
@@ -22,7 +31,7 @@ export default function vps() {
       </div>
       <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm  w-100">
         <div className="container-fluid px-4">
-          <a className="navbar-brand fw-bold text-primary" href="#">Home</a>
+          <Link className="navbar-brand fw-bold text-primary" to="/">Home</Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
@@ -35,7 +44,7 @@ export default function vps() {
                   Departments
                 </a>
                 <ul className="dropdown-menu" aria-labelledby="departmentsDropdown">
-                  <li><a className="dropdown-item" href="#" onClick={()=>{setPage('lawOrder')}}> Law and Order</a>
+                  <li><a className="dropdown-item" href="#"  onClick={()=>{setPage('lawOrder')}}> Law and Order</a>
                   
                   </li>
                   <li><a className="dropdown-item" href="#" onClick={()=>{setPage('womenProtection')}}>Women Protection</a></li>
@@ -83,7 +92,7 @@ export default function vps() {
 
       {/* Conditional rendering based on the selected page */}
       { page === null && <VpsHome /> }
-      { page==='lawOrder' && <LawOrder /> }
+      { page==='lawOrder' && <LawOrder department={page} location={location_param}/> }
       { page === 'womenProtection' && <WomenProtection /> }
       { page === 'cyberCrime' && <CyberCrime /> }
       <Footer />
