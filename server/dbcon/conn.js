@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors')
+
 const app = express();
 const { MongoClient } = require('mongodb');
 // app.use(express.json());
@@ -148,14 +149,24 @@ const reportSchema = new mongoose.Schema({
     victim_id:{
         type:Number
     },
+    
+    victim_name:{
+        type:String
+    },
     victim_contact:{
         type: Number
     },
-    victim_name:{
+    date_of_incident:{
+        type: Date
+    },
+    criminal_name:{
         type:String
     },
     location:{
         type:String
+    },
+    criminal_type:{
+        type: String
     },
     description:{
         type:String
@@ -170,9 +181,12 @@ app.post('/api/post/women_protection/case', async (req, res)=>{
         const count = await reportModel.countDocuments();
         const data = new reportModel({
         victim_id: count+1,
-        victim_name: req.body.victim_name,
+        victim_name: req.body.victim_name,        
         victim_contact: req.body.victim_contact,
+        date_of_incident: req.body.date,
+        criminal_name: req.body.criminalName,
         location: req.body.victim_location,
+        criminal_type: req.body.criminalType,
         description: req.body.victim_description
 
     })
@@ -184,6 +198,35 @@ app.post('/api/post/women_protection/case', async (req, res)=>{
     catch(error){
         console.log(error);
         res.status(500).json({error:"failed to post case"})
+    }
+})
+//api for getting complaints
+
+app.get('/api/get/complaints', async (req, res)=>{
+    try{    
+        const client = new MongoClient('mongodb://127.0.0.1:27017')
+        await client.connect();
+        const db = client.db('laworder');
+        const complaints = await db.collection('womenprotectionreports').find().toArray();
+        res.json(complaints)
+        // console.log(db)
+    }
+    catch(err){
+        console.log(err)
+    }
+})
+
+//api to get the criminal as area wise
+app.get('/api/get/criminal/data', async (req, res)=>{
+    try{
+        const client = new  MongoClient('mongodb://127.0.0.1:27017')
+        await client.connect();
+        const db = client.db('laworder')
+        const criminal = await db.collection('womenprotectionreports').find().toArray();
+        res.json(criminal)
+    }
+    catch(err){
+        console.log("Error:", err)
     }
 })
 // Start the server

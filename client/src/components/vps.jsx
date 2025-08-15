@@ -7,6 +7,10 @@ import Footer from './footer';
 import VpsHome from './componentsvps/vpsHome';
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import Complaints from './componentsvps/complaints';
+import Criminal_info from './componentsvps/criminal_info'
+import Evidence from './componentsvps/evidence';
+
 
 export default function vps() {
   const [page, setPage] = useState(null);
@@ -57,9 +61,9 @@ export default function vps() {
                   Complaint Life Cycle
                 </a>
                 <ul className="dropdown-menu" aria-labelledby="complaintDropdown">
-                  <li><a className="dropdown-item" href="#">Complaint</a></li>
+                  <li><a className="dropdown-item" href="#" onClick={()=>{setPage('complaints')}}>Complaint</a></li>
                   <li><a className="dropdown-item" href="#">Case Status Tracking</a></li>
-                  <li><a className="dropdown-item" href="#">Case Evidence/Documents</a></li>
+                  <li><a className="dropdown-item" href="#" onClick={()=>{setPage('evidence')}}>Case Evidence/Documents</a></li>
                 </ul>
               </li>
 
@@ -68,7 +72,7 @@ export default function vps() {
                   Criminal Information
                 </a>
                 <ul className="dropdown-menu" aria-labelledby="criminalDropdown">
-                  <li><a className="dropdown-item" href="#">State/Area/Age-wise Records</a></li>
+                  <li><a className="dropdown-item" href="#" onClick={()=>{setPage('criminal_info')}}>State/Area/Age-wise Records</a></li>
                   <li><a className="dropdown-item" href="#">Crime Heatmap Generation</a></li>
                   <li><a className="dropdown-item" href="#">Repeat Offender Flagging</a></li>
                 </ul>
@@ -95,6 +99,9 @@ export default function vps() {
       { page==='lawOrder' && <LawOrder department={page} location={location_param}/> }
       { page === 'womenProtection' && <WomenProtection /> }
       { page === 'cyberCrime' && <CyberCrime /> }
+      { page ==='complaints' && <Complaints/>}
+      { page ==='criminal_info' && <Criminal_info/>}
+      { page ==='evidence' && <Evidence/>}
       <Footer />
     </div>
   )
