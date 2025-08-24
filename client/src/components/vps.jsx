@@ -10,6 +10,9 @@ import { Link } from 'react-router-dom';
 import Complaints from './componentsvps/complaints';
 import Criminal_info from './componentsvps/criminal_info'
 import Evidence from './componentsvps/evidence';
+import Fir from './componentsvps/fir'
+import LicenceApplicationForm from './componentsvps/license_application'
+import LicenceStatus from './componentsvps/show_licences'
 
 
 export default function vps() {
@@ -48,6 +51,9 @@ export default function vps() {
                   Departments
                 </a>
                 <ul className="dropdown-menu" aria-labelledby="departmentsDropdown">
+                  <li><a className="dropdown-item" href="#"  onClick={()=>{setPage('fir')}}>File FIR</a>
+                  
+                  </li>
                   <li><a className="dropdown-item" href="#"  onClick={()=>{setPage('lawOrder')}}> Law and Order</a>
                   
                   </li>
@@ -83,8 +89,8 @@ export default function vps() {
                   Licence Management
                 </a>
                 <ul className="dropdown-menu" aria-labelledby="licenseDropdown">
-                  <li><a className="dropdown-item" href="#">Citizen Dashboard (Arms, DJ, Events)</a></li>
-                  <li><a className="dropdown-item" href="#">Licence Status</a></li>
+                  <li><a className="dropdown-item" href="#" onClick={()=> setPage('licence-form')}>Citizen Dashboard (Arms, DJ, Events)</a></li>
+                  <li><a className="dropdown-item" href="#" onClick={()=>{ setPage('licence-status')}}>Licence Status</a></li>
                   <li><a className="dropdown-item" href="#">Other Requests</a></li>
                 </ul>
               </li>
@@ -102,6 +108,9 @@ export default function vps() {
       { page ==='complaints' && <Complaints/>}
       { page ==='criminal_info' && <Criminal_info/>}
       { page ==='evidence' && <Evidence/>}
+      { page ==='fir' && <Fir/>}
+      { page ==='licence-form' && <LicenceApplicationForm/>} 
+      { page ==='licence-status' && <LicenceStatus/>}
       <Footer />
     </div>
   )

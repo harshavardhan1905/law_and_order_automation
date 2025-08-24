@@ -173,10 +173,10 @@ const reportSchema = new mongoose.Schema({
     }
 })
 
-const reportModel = mongoose.model("womenProtectionReports", reportSchema);
+const reportModel = mongoose.model("firs", reportSchema);
 // const  count = await reportModel.countDocuments();
 // console.log(count)
-app.post('/api/post/women_protection/case', async (req, res)=>{
+app.post('/api/post/firs/case', async (req, res)=>{
     try{
         const count = await reportModel.countDocuments();
         const data = new reportModel({
@@ -207,7 +207,7 @@ app.get('/api/get/complaints', async (req, res)=>{
         const client = new MongoClient('mongodb://127.0.0.1:27017')
         await client.connect();
         const db = client.db('laworder');
-        const complaints = await db.collection('womenprotectionreports').find().toArray();
+        const complaints = await db.collection('firs').find().toArray();
         res.json(complaints)
         // console.log(db)
     }
@@ -222,13 +222,79 @@ app.get('/api/get/criminal/data', async (req, res)=>{
         const client = new  MongoClient('mongodb://127.0.0.1:27017')
         await client.connect();
         const db = client.db('laworder')
-        const criminal = await db.collection('womenprotectionreports').find().toArray();
+        const criminal = await db.collection('firs').find().toArray();
         res.json(criminal)
     }
     catch(err){
         console.log("Error:", err)
     }
 })
+//posting licence applications
+const licenceSchema = new mongoose.Schema({
+    licence_id:{
+        type: Number
+    },
+    applicant_name:{
+        type: String
+    },
+    contact:{
+        type: Number
+    },
+    application_type:{
+        type: String
+    },
+    event_date:{
+        type: Date
+    },
+    adress:{
+        type: String
+    },
+    purpose:{
+        type: String
+    },
+    attachments:{
+        type: String
+    }
+});
+const licenceModel = mongoose.model('licences', licenceSchema);
+app.post('/api/post/licence_applications', async(req, res)=>{
+    try{
+        const count = await licenceModel.countDocuments();
+        const data = new licenceModel({
+            licence_id: count+1,
+            applicant_name: req.body.applicant_name,
+            contact: req.body.contact,
+            application_type: req.body.application_type,
+            event_date: req.body.event_date,
+            adress: req.body.address,
+            purpose: req.body.purpose,
+            attachments: req.body.attachments
+
+    });
+    console.log(req.body)
+    const licenceData = await data.save();
+    console.log(licenceData)
+    res.json(licenceData)
+    }
+    catch(err){
+        console.log(err)
+    }
+
+})
+//get the licences
+app.get('/api/get/licences', async(req, res)=>{
+    const client = new MongoClient('mongodb://127.0.0.1:27017');
+    await client.connect();
+    const db = client.db('laworder');
+    const licences = await db.collection('licences').find().toArray();
+    res.json(licences)
+})
+
+
+
+
+
+
 // Start the server
 app.listen(3001, () => {
     console.log("Server is running on port 3001");
