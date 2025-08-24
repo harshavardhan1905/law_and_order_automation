@@ -1,32 +1,13 @@
-import './App.css'
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import Footer from './components/footer'
-import News from './components/news';
+import React from 'react'
+import { useLocation } from 'react-router-dom';
 
-function Home() {
-  const [page, setPage] = useState('home');
-  const Navigate = useNavigate();
-
-  if (page === 'admin-login') Navigate('/admin-login');
-  else if (page === 'citizen-login') Navigate('/citizen-login');
-  else if (page === 'officer-login') Navigate('/officer-login');
-
+export default function vpsHome() {
+    const location = useLocation();
+    // console.log(location.state); // To check if location state is passed correctly
   return (
     <div>
-      {/* Navbar */}
-      <div className="container-fluid bg-light border-bottom position-fixed top-0 start-0 z-3 px-4 py-2" style={{ width: '100%' }}>
-        <div className="d-flex justify-content-between align-items-center w-100">
-          <h2 className="m-0">Law and Order Automation..!</h2>
-          <div className="btns d-flex gap-2">
-            <button className="btn btn-outline-primary" onClick={() => setPage('admin-login')}>Admin Login</button>
-            <button className="btn btn-outline-success" onClick={() => setPage('citizen-login')}>Citizen Login</button>
-            <button className="btn btn-outline-danger" onClick={() => setPage('officer-login')}>Officer Login</button>
-          </div>
-        </div>
-      </div>
-
-      {/* Cards Section */}
+        {/* Cards Section */}
+        <h5>Wellcome to <strong>{location.state.location}</strong> VPS</h5>
       <div className='container d-flex flex-wrap justify-content-center align-items-center gap-4 py-5 mt-5'>
         <div className='card shadow-sm p-4 rounded-4 bg-white' style={{ width: '300px' }}>
           <h4 className='border-bottom pb-2'>Objective</h4>
@@ -48,15 +29,6 @@ function Home() {
           <p>Enhanced transparency, faster case resolution, easy access to criminal records, and better coordination across law enforcement units.</p>
         </div>
       </div>
-
-      {/* News */}
-      <News />
-
-      {/*footer*/}
-      <Footer />
-
     </div>
-  );
+  )
 }
-
-export default Home;

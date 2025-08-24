@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import VpAppoint from "./adminPages/vpsAppoint";
+import Vps from "../src/components/vps"
 
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import Footer from "./components/footer";
 
 
 //Fetching url data from /api/officeres
@@ -40,23 +42,24 @@ const AdminHome = () => {
     //invoke the setOfficer useState
     setOfficers(dataOfficers)
   }
+  // console.log(typeof officer)
   // console.log(officerHandler())
   useEffect(() => {
     // console.log(officerHandler());
     officerHandler();
   }, [])
   //check the data is assigned or not 
-  // console.log(officer)
+  console.log(officer)
 
   //fetch the citizen data 
   const [citizen, setCitizen] = useState([]);
   const citizenHandler = async () => {
-    try{
+    try {
       const response = await fetch(citizens);
       const citizenData = await response.json();
       setCitizen(citizenData)
     }
-    catch(error){
+    catch (error) {
       console.error("failed to fetch the citizens:", error)
     }
   }
@@ -67,7 +70,7 @@ const AdminHome = () => {
   // console.log(citizen)
 
   ///posting data to the officers api
-  const officerPostHandler =(event)=>{
+  const officerPostHandler = (event) => {
     event.preventDefault();
     const officer_name = event.target.name_officer.value;
     const officer_address = event.target.address_officer.value;
@@ -78,12 +81,18 @@ const AdminHome = () => {
       officer_address,
       officer_role,
       officer_working
-    }).then((response) =>{
+    }).then((response) => {
       console.log(response);
-    }).catch((error)=>{
+    }).catch((error) => {
       console.log(error);
     })
 
+  }
+
+  //button add officer disable
+  const [isDisabled, setIsDisabled] = useState(false);
+  const addOfficerHandler = () => {
+    setIsDisabled(true);
   }
 
   return (
@@ -133,12 +142,12 @@ const AdminHome = () => {
           </div>
         )}
       </div>
-{/* //buttons */}
+      {/* //buttons */}
       <div class="d-flex bg-light justify-content-center">
         <button class="p-2  btn-outline-secondary" onClick={() => setAllShowContent('police-officers-data')}>Policer Officers</button>
         <button class="p-2 btn-outline-secondary" onClick={() => setAllShowContent('citizen-data')}>Citizen</button>
         <button class="p-2 btn-outline-secondary" onClick={() => setAllShowContent('appointing')}>Appointing</button>
-        <button class="p-2 btn-outline-secondary">VPS create/edit</button>
+        <button class="p-2 btn-outline-secondary" onClick={() => setAllShowContent('vps')}>VPS create/edit</button>
       </div>
 
       <div id="showing_data scroll-box">
@@ -146,63 +155,70 @@ const AdminHome = () => {
         {showAllContent === 'police-officers-data' && (
           <div class=" my-5">
             <div class="table-responsive  mx-auto  p-4 bg-light rounded">
-              <h3 class="text-center mb-4">👮 Police Officers Data</h3>
-              <button className="btn btn-close" title="CLose" onClick={() => setAllShowContent(null)}></button>
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="text-center mb-4">👮 Police Officers Data</h3>
+                <button className="btn btn-close" title="CLose" onClick={() => setAllShowContent(null)}></button>
+              </div>
 
               <div className="container" id="addOfficer">
                 <form className="d-flex w-100 gap-4 m-4" onSubmit={officerPostHandler}>
                   <div className="form-group">
                     {/* <label htmlFor="NameOfofficer">Name</label> */}
 
-                    <input 
-                    type="text" 
-                    id="name_officer"
-                    className="form-control" 
-                    placeholder="Name of officer" />
+                    <input
+                      type="text"
+                      id="name_officer"
+                      className="form-control"
+                      placeholder="Name of officer" />
 
                   </div>
                   <div className="form-group">
-                    <input 
-                    type="text" 
-                    className="form-control" 
-                    name="address_officer"
-                    placeholder="Address of officer" />
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="address_officer"
+                      placeholder="Address of officer" />
 
 
                   </div>
                   <div className="form-group">
-                    <input 
-                    type="text" 
-                    className="form-control" 
-                    name="role_officer"
-                    placeholder="Role of officer" 
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="role_officer"
+                      placeholder="Role of officer"
                     />
 
                   </div>
                   <div className="form-group">
-                    <input 
-                    type="text" 
-                    name="working_officer"
-                    className="form-control" 
-                    placeholder="working ps" 
+                    <input
+                      type="text"
+                      name="working_officer"
+                      className="form-control"
+                      placeholder="working ps"
                     />
 
                   </div>
 
-                  <button type="submit" className="btn btn-success">Add officer</button>
+                  <button type="submit" className="btn btn-success" disabled={isDisabled} onClick={addOfficerHandler}>Add officer</button>
                 </form>
-                
+
               </div>
 
               {/* //officers table */}
-              <div className="table-box">
-                <input type="text"
+              <div className="m-4 p-3 bg-light rounded">
+                <input
+                  type="text"
                   name="search"
-                  placeholder="Enter officer name/id"
+                  placeholder="Search by name"
                   className="form-control w-25 float-end bg-white search-box"
-                  />
+                />
+              </div>
+
+              <div className="table-box mb-5 m-4">
+
                 <table class="table table-bordered table-hover text-center bg-white">
-                  
+
                   <thead class="thead-dark">
                     <tr>
                       <th>Officer ID</th>
@@ -223,12 +239,12 @@ const AdminHome = () => {
                         </tr> */}
                     {officer.map((item) => {
                       return (
-                        <tr>
+                        <tr style={{ height: "10px" }}>
                           <td>{item.officer_id}</td>
                           <td>{item.name}</td>
                           <td>{item.address}</td>
                           <td>{item.role}</td>
-                          <td>{item.working_in}</td>
+                          <td>{item.working}</td>
                           <td><button class="btn btn-primary btn-sm" onClick={() => setAllShowContent('appointing')}>Appoint</button></td>
 
                         </tr>
@@ -262,17 +278,17 @@ const AdminHome = () => {
                     <th>Appoint</th>
                   </tr>
                 </thead>
-                <tbody> 
-                  {citizen.map((item) =>{
+                <tbody>
+                  {citizen.map((item) => {
                     return (
                       <tr>
-                    <td>{item.officer_id}</td>
-                    <td>{item.name}</td>
-                    <td>{item.address}</td>
-                    <td>{item.role}</td>
-                    <td>{item.working_in}</td>
-                    <td><button class="btn btn-primary btn-sm">Appoint</button></td>
-                  </tr>
+                        <td>{item.officer_id}</td>
+                        <td>{item.name}</td>
+                        <td>{item.address}</td>
+                        <td>{item.role}</td>
+                        <td>{item.working}</td>
+                        <td><button class="btn btn-primary btn-sm">Appoint</button></td>
+                      </tr>
                     )
                   })}
                   <tr>
@@ -293,8 +309,15 @@ const AdminHome = () => {
         {showAllContent === 'appointing' && (
           <VpAppoint onClose={() => setAllShowContent(null)} />
         )}
+        {
+          showAllContent === 'vps' && (
+            <Vps onClose={() => setAllShowContent(null)} />
+          )
+        }
 
       </div>
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
