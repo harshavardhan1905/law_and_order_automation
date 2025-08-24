@@ -6,6 +6,8 @@ import AdminLogin from './loginPages/adminLogin'
 import CitizenLogin from './loginPages/citizenLogin';
 import OfficerLogin from './loginPages/officerLogin';
 import Vps from './components/vps';
+import OfficerVps from './officer_operations/officer_vps'
+import CitSignUp from './components/signups/citizenSignup'
 
 function App() {
   return (
@@ -25,6 +27,9 @@ function App() {
           {/* //login Vps */}
           {/* <Vps /> */}
           <Route path='/vps' element={<Vps />}></Route>
+          <Route path='/officer/vps' element={<OfficerVps/>}></Route>
+          <Route path='/citizen-signup' element={<CitSignUp/>}></Route>
+          
         </Routes>
       </BrowserRouter>
 

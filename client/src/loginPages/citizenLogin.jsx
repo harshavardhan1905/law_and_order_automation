@@ -1,23 +1,35 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 export default function CitizenLogin() {
-  const navigate = useNavigate(); // Correct way to navigate
+  const navigate = useNavigate();
+  // const [citizens, setCitizens] = useState([]);
+
+  
 
   const handleLogin = (e) => {
     e.preventDefault();
 
-    const userName = e.target.username.value;
-    const password = e.target.password.value;
+    const userName = e.target.username.value.trim();
+    const password = e.target.password.value.trim();
     const location = e.target.location.value;
-
-    console.log("Username:", userName, "Password:", password, "Location:", location);
-
-    if (userName === 'citizen' && password === '123') {
-      navigate('/vps',  { state: { location } }); // Correct usage of navigation
-    } else {
-      alert('Invalid credentials');
-    }
+    // console.log(userName)
+    axios.post('http://127.0.0.1:3001/api/citizen/login', 
+      {userName,
+      password})
+      .then(result =>{
+        if(result.data==="success"){
+          navigate('/vps', {state: {location}})
+        }
+        else if(result.data==="password incorrect!"){
+          alert("password incorrect!")
+        }
+        else{
+          alert("User not exist!!")
+        }
+      })
+    
   };
 
   return (
@@ -35,16 +47,17 @@ export default function CitizenLogin() {
 
         <div className='form-group mb-3'>
           <label htmlFor="username">Username</label>
-          <input type="text" name='username' value="citizen" className='form-control' placeholder='Username' required />
+          <input type="text" name='username' className='form-control' placeholder='Enter username' required />
         </div>
 
         <div className='form-group mb-3'>
           <label htmlFor="password">Password</label>
-          <input type="password" name='password' value="123" className='form-control' placeholder='********' required />
+          <input type="password" name='password' className='form-control' placeholder='********' required />
         </div>
+
         <div className='form-group mb-3'>
-          <select name="location" id="" className='form-select' required>
-            <option value="" disabled selected>Select Location</option>
+          <select name="location" className='form-select' required>
+            <option value="" disabled defaultValue>Select Location</option>
             <option value="Dundhigal">Dundhigal</option>
             <option value="Gandimaisamma">Gandimaisamma</option>
             <option value="Medchal">Medchal</option>
@@ -54,7 +67,8 @@ export default function CitizenLogin() {
         <button type="submit" className='form-control btn btn-primary'>Login</button>
 
         <div className="mt-3 text-center">
-          <a href="#">Sign Up?</a>
+          <span>Don't have an account? </span>
+          <Link to="/citizen-signup">Sign Up</Link>
         </div>
       </form>
     </div>
