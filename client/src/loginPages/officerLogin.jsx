@@ -1,13 +1,28 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function officerLogin() {
+  const Navigate = useNavigate();
+  const  officerLoginHandle =(event)=>{
+    event.preventDefault();
+    const username = event.target.username.value;
+    const password = event.target.password.value;
+    const location = event.target.location.value;
+    if(username==='harsha_05' && password==='123'){
+      Navigate('/officer/vps',  { state: { location } })
+      // alert("wait for login")
+    }
+    else{
+      alert("invalid crediantial")
+    }
+  }
   return (
     <div className='justify-content-center d-flex align-items-center bg-light' style={{ width: '400px' }}>
   <form
     action=""
     className='rounded bg-white p-5 shadow position-relative'  // <== Add position-relative
     style={{ width: '100%', maxWidth: '400px' }}
+    onSubmit={officerLoginHandle}
   >
     {/* Home Button Positioned Inside Form */}
     <div
@@ -30,7 +45,7 @@ export default function officerLogin() {
       <input type="password" id='password' className='form-control' placeholder='password' />
     </div>
     <div className='form-group mb-3'>
-          <select name="location" id="" className='form-select' required>
+          <select name="location" id="location" className='form-select' required>
             <option value="" disabled selected>Select Location</option>
             <option value="Dundhigal">Dundhigal</option>
             <option value="Gandimaisamma">Gandimaisamma</option>

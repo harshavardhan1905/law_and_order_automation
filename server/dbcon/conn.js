@@ -289,7 +289,77 @@ app.get('/api/get/licences', async(req, res)=>{
     const licences = await db.collection('licences').find().toArray();
     res.json(licences)
 })
-
+//API for citizen sign up
+const signUpSchema = new mongoose.Schema({
+    citizen_name:{
+        type: String
+    },
+    citizen_email:{
+        type:String
+    },
+    password:{
+        type: Number
+    },
+    citizen_phone:{
+        type: Number
+    },
+    citizen_address:{
+        type: String
+    }
+})
+const citizenSignModel = new  mongoose.model('citizens', signUpSchema);
+app.post('/api/post/citizen-signup', async (req, res)=>{
+    try{
+        const count = await citizenSignModel.countDocuments();
+        const data = new citizenSignModel({
+            citizen_id: count+1,
+            citizen_name: req.body.name,
+            citizen_email: req.body.email,
+            
+            citizen_phone: req.body.phone,
+            password: req.body.password,
+            citizen_address: req.body.address
+        })
+        console.log(req.body)
+        const citizenData = await data.save();
+        console.log(citizenData)
+        res.json(citizenData)
+    }
+    catch(err){
+        console.log(err)
+    }
+})
+//api for login citizen
+app.post('/api/citizen/login', async(req, res)=>{
+    const email = req.body.userName;
+    const pass = req.body.password;
+    const password = +pass;
+    // console.log(email, password)
+    try{
+        citizenSignModel.findOne({citizen_email: email})
+    .then(user =>{
+        if(user){
+            if(user.password === password){
+                res.json("success")
+                // console.log("sucess")
+                // console.log()
+            }
+            else{
+                res.json("password incorrect!")
+                console.log("pass incor")
+                // console.log(typeof user.password, typeof password)
+            }
+        }
+        else{
+            res.json("user not exist")
+            console.log("user not in")
+        }
+    })
+    }  
+    catch(err){
+        console.log(err)
+    }  
+})
 
 
 

@@ -28,6 +28,7 @@ export default function ShowLicences() {
               <th>Address</th>
               <th>Purpose</th>
               <th>Attachments</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -48,6 +49,7 @@ export default function ShowLicences() {
                     "N/A"
                   )}
                 </td>
+                <td>Approved</td>
               </tr>
             ))}
           </tbody>
