@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import VpAppoint from "./adminPages/vpsAppoint";
 import Vps from "../src/components/vps"
-
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import Footer from "./components/footer";
@@ -10,7 +9,7 @@ import Footer from "./components/footer";
 //Fetching url data from /api/officeres
 const adminDetails = "http://localhost:3001/api/admin";
 const officers = "http://localhost:3001/api/officers";
-const citizens = "http://localhost:3001/api/citizens";
+
 // console.log(officers)
 
 const AdminHome = () => {
@@ -22,6 +21,7 @@ const AdminHome = () => {
 
   //fetch the admin details
   const [adminDetail, setAdminDetails] = useState([]);
+  let passStatus;
   const adminHandler = async () => {
     const adminData = await fetch(adminDetails);
     const admindata = await adminData.json();
@@ -52,14 +52,17 @@ const AdminHome = () => {
   console.log(officer)
 
   //fetch the citizen data 
+  
   const [citizen, setCitizen] = useState([]);
   const citizenHandler = async () => {
     try {
-      const response = await fetch(citizens);
+      const response = await fetch('http://localhost:3001/api/citizens');
+      console.log(response)
       const citizenData = await response.json();
       setCitizen(citizenData)
+      console.log(citizen)
     }
-    catch (error) {
+    catch(error) {
       console.error("failed to fetch the citizens:", error)
     }
   }
@@ -68,17 +71,32 @@ const AdminHome = () => {
   }, [])
   // console.log(typeof citizen)
   // console.log(citizen)
-
+  const [password, setPassword] = useState([])
+  const [Confirmpassword, setConfirmpassword] = useState([])
+  
+console.log(password)
   ///posting data to the officers api
   const officerPostHandler = (event) => {
     event.preventDefault();
+    setPassword(event.target.password.value)
     const officer_name = event.target.name_officer.value;
     const officer_address = event.target.address_officer.value;
+    const email = event.target.email.value;
+    const password = event.target.password.value;
+    const Conpass = event.target.Confirmpassword.value;
     const officer_role = event.target.role_officer.value;
     const officer_working = event.target.working_officer.value
-    axios.post("http://localhost:3001/add/officer", {
+    
+    // console.log(officer_name)
+    
+    
+    if(password===Conpass){
+      passStatus = <span style={{"color":"Green", "fontSize":"12px"}}>Password matched</span>;
+      axios.post("http://localhost:3001/add/officer", {
       officer_name,
       officer_address,
+      email,
+      password,
       officer_role,
       officer_working
     }).then((response) => {
@@ -88,12 +106,17 @@ const AdminHome = () => {
     })
 
   }
+  else{
+    alert("Password doesn't match")
+    passStatus = <span style={{"color":"red", "fontSize":"12px"}}>Please enter same password</span>;
+  }
+    }
 
   //button add officer disable
-  const [isDisabled, setIsDisabled] = useState(false);
-  const addOfficerHandler = () => {
-    setIsDisabled(true);
-  }
+  // const [isDisabled, setIsDisabled] = useState(false);
+  // const addOfficerHandler = () => {
+  //   setIsDisabled(true);
+  // }
 
   return (
     <div className="w-100  border-bottom position-absolute top-0 start-0 z-3">
@@ -168,14 +191,41 @@ const AdminHome = () => {
                     <input
                       type="text"
                       id="name_officer"
+                      name="name_officer"
                       className="form-control"
                       placeholder="Name of officer" />
 
                   </div>
                   <div className="form-group">
                     <input
+                    type="text" 
+                    id="email"
+                    name="email"
+                    className="form-control"
+                    placeholder="Enter gmail"/>
+                  </div>
+                  <div className="form-group">
+                    <input type="text" 
+                    id="password"
+                    name="password"
+                    className="form-control"
+                    placeholder="Set password" />
+                  </div>
+                    <div className="form-group">
+                    <input type="text" 
+                    id="Confirmpassword"
+                    name="Confirmpassword"
+                    className="form-control"
+                    placeholder="Confirm password"
+                    />
+                    
+              {passStatus}
+                  </div>
+                  <div className="form-group">
+                    <input
                       type="text"
                       className="form-control"
+                      id="address_officer"
                       name="address_officer"
                       placeholder="Address of officer" />
 
@@ -185,6 +235,7 @@ const AdminHome = () => {
                     <input
                       type="text"
                       className="form-control"
+                      id="role_officer"
                       name="role_officer"
                       placeholder="Role of officer"
                     />
@@ -194,13 +245,14 @@ const AdminHome = () => {
                     <input
                       type="text"
                       name="working_officer"
+                      id="working_officer"
                       className="form-control"
                       placeholder="working ps"
                     />
 
                   </div>
 
-                  <button type="submit" className="btn btn-success" disabled={isDisabled} onClick={addOfficerHandler}>Add officer</button>
+                  <button type="submit" className="btn btn-success" >Add officer</button>
                 </form>
 
               </div>
@@ -271,34 +323,28 @@ const AdminHome = () => {
                 <thead class="thead-dark">
                   <tr>
                     <th>Citizen ID</th>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Role</th>
-                    <th>Working In</th>
-                    <th>Appoint</th>
+                    <th>Citizen Name</th>
+                    <th>Citizen Email</th>
+                    <th>Citizen Address</th>
+                    <th>Phone</th>
+                  
+                    <th>Case</th>
                   </tr>
                 </thead>
                 <tbody>
                   {citizen.map((item) => {
                     return (
-                      <tr>
-                        <td>{item.officer_id}</td>
-                        <td>{item.name}</td>
-                        <td>{item.address}</td>
-                        <td>{item.role}</td>
-                        <td>{item.working}</td>
-                        <td><button class="btn btn-primary btn-sm">Appoint</button></td>
+                      <tr >
+                        <td>{item.citizen_id}</td>
+                        <td>{item.citizen_name}</td>
+                        <td>{item.citizen_email}</td>
+                        <td>{item.citizen_address}</td>
+                        <td>{item.citizen_phone}</td>
+                        <td><button class="btn btn-primary btn-sm">Cases</button></td>
                       </tr>
                     )
                   })}
-                  <tr>
-                    <td>102</td>
-                    <td>Arjun</td>
-                    <td>Warangal</td>
-                    <td>ACP</td>
-                    <td>Kazipet-ps</td>
-                    <td><button class="btn btn-primary btn-sm">Appoint</button></td>
-                  </tr>
+                  
                 </tbody>
               </table>
             </div>

@@ -47,6 +47,10 @@ const officersSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    email:{
+        type: String,
+        required: true
+    },
     address: {
         type: String,
         required: true
@@ -63,19 +67,6 @@ const officersSchema = new mongoose.Schema({
 })
 const OfficersModel = mongoose.model('officers', officersSchema);
 
-// const officersUserModel = mongoose.model("officers", UserSchema)
-
-// async function getData() {
-//     const client = new MongoClient('mongodb://127.0.0.1:27017');
-//     await client.connect();
-//     const db = client.db('laworder');
-//     const user = await db.collection('officers').find().toArray();
-//     return user
-
-// }
-// getData().then(user =>{
-//     console.log(user)
-// })
 //api for officers details
 app.get('/api/officers', async (req, res) => {
     const client = new MongoClient('mongodb://127.0.0.1:27017');
@@ -84,14 +75,30 @@ app.get('/api/officers', async (req, res) => {
     const user = await db.collection('officers').find().toArray();
     res.json(user);
 })
+app.get('/api/officers/location', async (req, res) =>{
+    try{
+        const client = new MongoClient('mongodb://127.0.0.1:27017');
+        await client.connect();
+        const {location} = "Dundhigal";
+        console.log(location)
+        const db = client.db('laworder');
+        const user = await db.collection('officers').findOne({location}).toArray();
+        res.json(user)
+        }
+    catch(err){
+        console.log(err)
+    }
+})
 app.post('/add/officer', async (req, res) => {
     // const len_offficer_data = db.officers.countDocuments();
     // console.log(len_offficer_data);
-    const count = await OfficersModel.countDocuments();
+    try{
+        const count = await OfficersModel.countDocuments();
     // console.log(count)
     const data = new OfficersModel({
         officer_id: count + 1,
         name: req.body.officer_name,
+        email: req.body.email,
         address: req.body.officer_address,
         role: req.body.officer_role,
         working: req.body.officer_working
@@ -102,6 +109,10 @@ app.post('/add/officer', async (req, res) => {
     res.status(201).json(OfficersData);
     const user = await db.collection('officers').find().toArray();
     res.json(user)
+    }
+    catch(err){
+        console.log(err)
+    }
 })
 //api for fetching citizen data 
 app.get('/api/citizens', async (req, res) => {
@@ -291,6 +302,9 @@ app.get('/api/get/licences', async(req, res)=>{
 })
 //API for citizen sign up
 const signUpSchema = new mongoose.Schema({
+    citizen_id:{
+        type: Number
+    },
     citizen_name:{
         type: String
     },
@@ -298,7 +312,7 @@ const signUpSchema = new mongoose.Schema({
         type:String
     },
     password:{
-        type: Number
+        type: String
     },
     citizen_phone:{
         type: Number
@@ -314,8 +328,7 @@ app.post('/api/post/citizen-signup', async (req, res)=>{
         const data = new citizenSignModel({
             citizen_id: count+1,
             citizen_name: req.body.name,
-            citizen_email: req.body.email,
-            
+            citizen_email: req.body.email,   
             citizen_phone: req.body.phone,
             password: req.body.password,
             citizen_address: req.body.address
@@ -333,13 +346,13 @@ app.post('/api/post/citizen-signup', async (req, res)=>{
 app.post('/api/citizen/login', async(req, res)=>{
     const email = req.body.userName;
     const pass = req.body.password;
-    const password = +pass;
+    // const password = +pass;
     // console.log(email, password)
     try{
         citizenSignModel.findOne({citizen_email: email})
     .then(user =>{
         if(user){
-            if(user.password === password){
+            if(user.password === pass){
                 res.json("success")
                 // console.log("sucess")
                 // console.log()

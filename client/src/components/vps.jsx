@@ -13,6 +13,7 @@ import Evidence from './componentsvps/evidence';
 import Fir from './componentsvps/fir'
 import LicenceApplicationForm from './componentsvps/license_application'
 import LicenceStatus from './componentsvps/show_licences'
+import OfficersCitizen from './componentsvps/officers_citizenpage'
 
 
 export default function vps() {
@@ -52,6 +53,9 @@ export default function vps() {
                 </a>
                 <ul className="dropdown-menu" aria-labelledby="departmentsDropdown">
                   <li><a className="dropdown-item" href="#"  onClick={()=>{setPage('fir')}}>File FIR</a>
+                  
+                  </li>
+                  <li><a className="dropdown-item" href="#"  onClick={()=>{setPage('officers-list')}}>Officers in Police station</a>
                   
                   </li>
                   <li><a className="dropdown-item" href="#"  onClick={()=>{setPage('lawOrder')}}> Law and Order</a>
@@ -111,6 +115,7 @@ export default function vps() {
       { page ==='fir' && <Fir/>}
       { page ==='licence-form' && <LicenceApplicationForm/>} 
       { page ==='licence-status' && <LicenceStatus/>}
+      { page ==='officers-list' && <OfficersCitizen location={location_param}/>}
       <Footer />
     </div>
   )
